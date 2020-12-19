@@ -6,17 +6,10 @@ const blogSchema = new Schema(
     title: {
       type: String,
       required: true,
-      length: {
-        min: 1,
-        max: 200,
-      },
     },
     post: {
       type: String,
       required: true,
-      length: {
-        min: 1,
-      },
     },
     isPublic: {
       type: Boolean,

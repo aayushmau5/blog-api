@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const JwtStratery = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
+const cors = require("cors");
 require("dotenv").config();
 
 const User = require("./Models/User");
@@ -13,6 +14,7 @@ const userRoutes = require("./Routes/userRoutes");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,9 +30,14 @@ passport.use(
     (jwt_payload, done) => {
       console.log(jwt_payload);
       User.findOne({ _id: jwt_payload.id }, (err, user) => {
-        if (err) return done(err, false);
-        if (user) return done(null, user);
-        else return done(null, false);
+        if (err) {
+          return done(err, false, { message: "User authentication failed" });
+        }
+        if (user) {
+          return done(null, user);
+        } else {
+          return done(null, false, { message: "User authentication failed" });
+        }
       });
     }
   )
@@ -44,8 +51,14 @@ app.get("/", (req, res, next) => {
   });
 });
 
-app.use("/blog", blogRoutes);
+app.use("/blogs", blogRoutes);
 app.use("/user", userRoutes);
+
+app.use((req, res, next) => {
+  res.status(400).json({
+    message: "Invalid Route",
+  });
+});
 
 app.use((err, req, res, next) => {
   res.status(500).json({
@@ -53,13 +66,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-mongoose
-  .connect(process.env.MONGODB, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-  })
-  .then((result) => {
-    app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
-  })
-  .catch((err) => console.log(err));
+mongoose.connect(process.env.MONGODB, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+});
+const connection = mongoose.connection;
+connection.on("error", console.error.bind(console, "Error Connecting to DB."));
+
+app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));

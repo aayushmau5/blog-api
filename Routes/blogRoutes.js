@@ -3,15 +3,17 @@ const passport = require("passport");
 
 const blogController = require("../Controllers/blogController");
 
-// GET /blog/
+// GET /blogs/
 router.get("/", blogController.getBlogs);
 
-// POST /blog/
+// POST /blogs/
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   blogController.postBlog
 );
-router.get("/:blogId", blogController.getSpecificBlog);
+
+// GET /blogs/blog/5fde31a206dbaa841509a76d
+router.get("/blog/:blogId", blogController.getSpecificBlog);
 
 module.exports = router;

@@ -1,7 +1,32 @@
 const User = require("../Models/User");
+const Blog = require("../Models/Blogs");
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
+
+exports.getUser = (req, res, next) => {
+  if (!mongoose.isValidObjectId(req.params.userId)) {
+    return res.json({
+      error: "Enter a valid User ID",
+    });
+  }
+  User.find({ _id: req.params.userId })
+    .select("-password")
+    .exec((err, user) => {
+      console.log(user);
+      if (err) return next(err);
+      if (!user) return res.json({ error: "No user found" });
+      Blog.find({ author: user._id }, (err, blogs) => {
+        console.log(blogs);
+        if (err) return next(err);
+        res.json({
+          user: user[0],
+          blogs: blogs,
+        });
+      });
+    });
+};
 
 exports.postLogin = [
   body("username")
