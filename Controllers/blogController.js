@@ -30,13 +30,13 @@ exports.postBlog = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json({
+      return res.status(422).json({
         errors: errors.array(),
       });
     }
     console.log(req.user);
     //TODO Authentication and Saving the blog
-    return res.json({ message: "Blog Posted" });
+    return res.status(200).json({ message: "Blog Posted" });
   },
 ];
 

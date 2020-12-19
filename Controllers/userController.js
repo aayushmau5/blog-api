@@ -13,7 +13,7 @@ exports.postLogin = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json({
+      return res.status(422).json({
         error: errors.array(),
       });
     }
@@ -51,7 +51,7 @@ exports.postSignup = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json({
+      return res.status(422).json({
         error: errors.array(),
       });
     }
@@ -70,7 +70,7 @@ exports.postSignup = [
           }
           return next(err);
         }
-        return res.json({
+        return res.status(400).json({
           message: "Signed In",
         });
       });

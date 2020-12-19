@@ -1,27 +1,20 @@
 const express = require("express");
-const app = express();
-require("dotenv").config();
 const mongoose = require("mongoose");
 const passport = require("passport");
 const JwtStratery = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
+require("dotenv").config();
+
 const User = require("./Models/User");
 
 const blogRoutes = require("./Routes/blogRoutes");
 const userRoutes = require("./Routes/userRoutes");
 
-const PORT = process.env.PORT || 3000;
+const app = express();
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-mongoose.connect(process.env.MONGODB, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  useCreateIndex: true,
-});
-const connection = mongoose.connection;
-connection.on("error", console.log.bind(console, "Mongodb connection error."));
 
 passport.use(
   new JwtStratery(
@@ -47,7 +40,7 @@ app.use(passport.initialize());
 
 app.get("/", (req, res, next) => {
   res.json({
-    message: "Hello World",
+    message: "Welcome to the Blog API",
   });
 });
 
@@ -55,9 +48,18 @@ app.use("/blog", blogRoutes);
 app.use("/user", userRoutes);
 
 app.use((err, req, res, next) => {
-  res.json({
+  res.status(500).json({
     error: err.message,
   });
 });
 
-app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+mongoose
+  .connect(process.env.MONGODB, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  })
+  .then((result) => {
+    app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+  })
+  .catch((err) => console.log(err));
