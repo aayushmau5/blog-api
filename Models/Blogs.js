@@ -25,8 +25,8 @@ const blogSchema = new Schema({
     type: Boolean,
     default: true,
   },
-  author: { type: mongoose.tags.ObjectId, ref: "User", required: true },
+  author: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
 });
 
-module.exports = mongoose.Model("Blog", blogSchema);
+module.exports = mongoose.model("Blog", blogSchema);
