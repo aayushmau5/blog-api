@@ -3,16 +3,19 @@ const { validationResult, body } = require("express-validator");
 
 const Blog = require("../Models/Blogs");
 
-exports.getBlogs = (req, res, next) => {
-  Blog.find({ isPublic: true })
-    .populate("author", ["_id", "username"])
-    .exec((err, blogs) => {
-      if (err) return next(err);
-      if (blogs.length === 0) return res.json({ error: "No blogs found" });
-      return res.status(200).json({
-        blogs: blogs,
-      });
+exports.getBlogs = async (req, res, next) => {
+  try {
+    const blogs = await Blog.find({ isPublic: true }).populate("author", [
+      "_id",
+      "username",
+    ]);
+    if (blogs.length === 0) return res.json({ error: "No blogs found" });
+    return res.status(200).json({
+      blogs: blogs,
     });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.postBlog = [
@@ -44,7 +47,7 @@ exports.postBlog = [
     .bail()
     .isBoolean()
     .withMessage("Public must be either true or false"),
-  (req, res, next) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({
@@ -52,36 +55,41 @@ exports.postBlog = [
       });
     }
     const { title, post, public } = req.body;
-    const blog = new Blog({
-      title: title,
-      post: post,
-      isPublic: public,
-      author: req.user._id,
-      comments: [],
-    });
-    blog.save((err, data) => {
-      if (err) return next(err);
+    try {
+      const blog = new Blog({
+        title: title,
+        post: post,
+        isPublic: public,
+        author: req.user._id,
+        comments: [],
+      });
+      const blogDb = await blog.save();
       res.status(200).json({
         success: true,
         message: "Blog saved to the database",
       });
-    });
+    } catch (err) {
+      next(err);
+    }
   },
 ];
 
-exports.getSpecificBlog = (req, res, next) => {
+exports.getSpecificBlog = async (req, res, next) => {
   if (!mongoose.isValidObjectId(req.params.blogId)) {
     return res.json({
       error: "Enter a valid Blog ID",
     });
   }
-  Blog.find({ _id: req.params.blogId })
-    .populate("author", ["_id", "username"])
-    .exec((err, blog) => {
-      if (err) return next(err);
-      if (blog.length === 0) return res.json({ error: "No blogs found" });
-      return res.status(200).json({
-        blog: blog[0],
-      });
+  try {
+    const blog = await Blog.find({ _id: req.params.blogId }).populate(
+      "author",
+      ["_id", "username"]
+    );
+    if (blog.length === 0) return res.json({ error: "No blogs found" });
+    return res.status(200).json({
+      blog: blog[0],
     });
+  } catch (err) {
+    next(err);
+  }
 };
