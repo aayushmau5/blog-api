@@ -13,7 +13,20 @@ router.post(
   blogController.postBlog
 );
 
-// GET /blogs/blog/5fde31a206dbaa841509a76d
+// GET /blogs/blog/:blogId
 router.get("/blog/:blogId", blogController.getSpecificBlog);
+
+// PUT /blogs/blog/:blogId
+router.put(
+  "/blog/:blogId",
+  passport.authenticate("jwt", { session: false }),
+  blogController.updateBlog
+);
+
+router.delete(
+  "/blog/:blogId",
+  passport.authenticate("jwt", { session: false }),
+  blogController.deleteBlog
+);
 
 module.exports = router;

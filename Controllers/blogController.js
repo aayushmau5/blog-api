@@ -5,10 +5,9 @@ const Blog = require("../Models/Blogs");
 
 exports.getBlogs = async (req, res, next) => {
   try {
-    const blogs = await Blog.find({ isPublic: true }).populate("author", [
-      "_id",
-      "username",
-    ]);
+    const blogs = await Blog.find({ isPublic: true })
+      .populate("author", ["_id", "username"])
+      .sort({ createdAt: -1 });
     if (blogs.length === 0) return res.json({ error: "No blogs found" });
     return res.status(200).json({
       blogs: blogs,
@@ -87,6 +86,99 @@ exports.getSpecificBlog = async (req, res, next) => {
     );
     if (blog.length === 0) return res.json({ error: "No blogs found" });
     return res.status(200).json({
+      blog: blog[0],
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateBlog = [
+  body("title")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("Title should not be empty")
+    .bail()
+    .isLength({ min: 1, max: 200 })
+    .withMessage(
+      "Title should be atleast 1 character long and maximum of 200 characters long"
+    )
+    .escape(),
+  body("post")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("Post should not be empty")
+    .bail()
+    .isLength({ min: 1 })
+    .withMessage("Post should be atleast 1 character long")
+    .escape(),
+  body("public")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("Public should not be empty")
+    .bail()
+    .isBoolean()
+    .withMessage("Public must be either true or false"),
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    }
+    if (!mongoose.isValidObjectId(req.params.blogId)) {
+      return res.json({
+        error: "Enter a valid Blog ID",
+      });
+    }
+    const { title, post, public } = req.body;
+    try {
+      const blog = await Blog.find({
+        _id: req.params.blogId,
+      });
+      if (blog.length === 0) return res.json({ error: "No blogs found" });
+      if (blog[0].author.toString() !== req.user._id.toString()) {
+        return res
+          .status(422)
+          .json({ error: "You are not the author of the blog" });
+      }
+      blog[0].title = title;
+      blog[0].post = post;
+      blog[0].isPublic = public;
+      const updatedBlog = await blog[0].save();
+      return res.status(200).json({
+        message: "Blog Update",
+        blog: updatedBlog,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
+exports.deleteBlog = async (req, res, next) => {
+  if (!mongoose.isValidObjectId(req.params.blogId)) {
+    return res.json({
+      error: "Enter a valid Blog ID",
+    });
+  }
+  try {
+    const blog = await Blog.find({ _id: req.params.blogId }).populate(
+      "author",
+      ["_id", "username"]
+    );
+    if (blog.length === 0) return res.json({ error: "No blogs found" });
+    if (blog[0].author._id.toString() !== req.user._id.toString()) {
+      return res
+        .status(422)
+        .json({ error: "You are not the author of the blog" });
+    }
+    const deletedBlog = await blog[0].delete();
+    return res.status(200).json({
+      message: "Blog deleted successfully",
       blog: blog[0],
     });
   } catch (err) {
