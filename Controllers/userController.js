@@ -12,11 +12,18 @@ exports.getUser = async (req, res, next) => {
     });
   }
   try {
+    let { page, data } = req.query;
+    page = +page || 1;
+    data = +data || undefined;
     const user = await User.find({ _id: req.params.userId }).select(
       "-password"
     );
     if (!user) return res.json({ error: "No user found" });
-    const blog = await Blog.find({ author: user[0]._id }).select("-author");
+    const blog = await Blog.find({ author: user[0]._id })
+      .select("-author")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * data)
+      .limit(data);
     res.json({
       user: user[0],
       blogs: blog,

@@ -3,11 +3,16 @@ const mongoose = require("mongoose");
 const Blog = require("../Models/Blogs");
 
 exports.getBlogs = async (req, res, next) => {
+  let { page, data } = req.query;
+  page = +page || 1;
+  data = +data || undefined;
   try {
     const blogs = await Blog.find({ isPublic: true })
       .populate("author", ["_id", "username"])
       .populate("comments")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * data)
+      .limit(data);
     if (blogs.length === 0) return res.json({ error: "No blogs found" });
     return res.status(200).json({
       blogs: blogs,
