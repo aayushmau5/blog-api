@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const passport = require("passport");
 
+const {
+  postBlogValidator,
+  validate,
+} = require("../helpers/validationAndSanitization");
 const blogController = require("../Controllers/blogController");
 
 // GET /blogs/
@@ -10,6 +14,8 @@ router.get("/", blogController.getBlogs);
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
+  postBlogValidator,
+  validate,
   blogController.postBlog
 );
 
@@ -20,6 +26,8 @@ router.get("/blog/:blogId", blogController.getSpecificBlog);
 router.put(
   "/blog/:blogId",
   passport.authenticate("jwt", { session: false }),
+  postBlogValidator,
+  validate,
   blogController.updateBlog
 );
 
