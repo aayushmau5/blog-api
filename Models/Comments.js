@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema(
   {
-    author: {
+    username: {
       type: String,
       required: true,
     },
@@ -15,4 +15,4 @@ const commentSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.Model("Comment", commentSchema);
+module.exports = mongoose.model("Comment", commentSchema);

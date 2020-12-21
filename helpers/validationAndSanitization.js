@@ -59,6 +59,21 @@ const postBlogValidator = () => {
   ];
 };
 
+const commentValidator = () => {
+  return [
+    body("username")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Please enter a valid username")
+      .isAlphanumeric()
+      .withMessage("Username must contain alphabet or numbers"),
+    body("comment")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Comment should not be empty"),
+  ];
+};
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
@@ -81,5 +96,6 @@ module.exports = {
   userSignupValidator,
   userLoginValidator,
   postBlogValidator,
+  commentValidator,
   validate,
 };

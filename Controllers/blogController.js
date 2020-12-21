@@ -6,6 +6,7 @@ exports.getBlogs = async (req, res, next) => {
   try {
     const blogs = await Blog.find({ isPublic: true })
       .populate("author", ["_id", "username"])
+      .populate("comments")
       .sort({ createdAt: -1 });
     if (blogs.length === 0) return res.json({ error: "No blogs found" });
     return res.status(200).json({
@@ -43,10 +44,9 @@ exports.getSpecificBlog = async (req, res, next) => {
     });
   }
   try {
-    const blog = await Blog.find({ _id: req.params.blogId }).populate(
-      "author",
-      ["_id", "username"]
-    );
+    const blog = await Blog.find({ _id: req.params.blogId })
+      .populate("author", ["_id", "username"])
+      .populate("comments");
     if (blog.length === 0) return res.json({ error: "No blogs found" });
     return res.status(200).json({
       blog: blog[0],

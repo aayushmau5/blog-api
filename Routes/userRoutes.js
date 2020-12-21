@@ -13,12 +13,12 @@ router.get("/:userId", userController.getUser);
 // POST /user/signup
 router.post(
   "/signup",
-  userSignupValidator,
+  userSignupValidator(),
   validate,
   userController.postSignup
 );
 
 // POST /user/login
-router.post("/login", userLoginValidator, validate, userController.postLogin);
+router.post("/login", userLoginValidator(), validate, userController.postLogin);
 
 module.exports = router;
