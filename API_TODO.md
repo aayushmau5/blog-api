@@ -13,13 +13,10 @@
 - Refactor validation and sanitization to have it's own function
 - POST `/blogs/blog/:blogId/comment` (commenting on a post)
 - DELETE `/blogs/blog/:blogId/comment/:commentId` (Deleting a specific comment, requires authentication and only on user's blog comments)
+- Use Query Parameter for blog pagination and limitation(Lookup countDocuments(), .skip() and .limit() in mongoose)
+- Properly document the API
 
 ### To be Implemented
 
-- Use Query Parameter for blog pagination and limitation(Lookup countDocuments(), .skip() and .limit() in mongoose)
-
-## Other ideas
-
 - Make tests for the routes
-- Properly document the API
 - Refactor and give proper responses
