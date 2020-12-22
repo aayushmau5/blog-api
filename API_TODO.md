@@ -20,3 +20,4 @@
 
 - Make tests for the routes
 - Refactor and give proper responses
+- Implement proper error handling

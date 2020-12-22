@@ -1,6 +1,6 @@
 # blog-api
 
-A blog API to serve your blogs.
+A blog REST API to serve your blogs.
 
 ### Endpoints
 
@@ -8,7 +8,7 @@ A blog API to serve your blogs.
 
 - POST `/user/login` - Loggin in the user, get's back JWT
 
-- GET `/user/:userId` - Get all data about a specific user
+- GET `/user/:userId` - Get all data about a specific user and all the blogs by that user.
 
 - GET `/blogs` - Get all public blogs
 
@@ -24,6 +24,6 @@ A blog API to serve your blogs.
 
 - DELETE `/blogs/blog/:blogId/comment/:commentId` - Deleting a specific comment, requires authentication and only on signed in user's blog comments.
 
-- Added support for pagination as well, You could do `/blogs?page=1&data=1` where `page` is the page number and `data` is the number of data you want to get per page.
+- Added support for pagination as well, You could do `/blogs?page=1&data=1` where `page` is the page number and `data` is the number of blogs you want to get per page.
 
 - Pagination is supported in `/blogs` and `/user/:userId` routes.
