@@ -22,11 +22,9 @@ exports.postComment = async (req, res, next) => {
       comment: comment,
     });
     const savedComment = await newComment.save();
-    console.log(savedComment);
 
     blog.comments.push(savedComment._id);
     const savedBlog = await blog.save();
-    console.log(savedBlog);
 
     res.status(200).json({
       success: true,

@@ -44,7 +44,7 @@ exports.postBlog = async (req, res, next) => {
 
 exports.getSpecificBlog = async (req, res, next) => {
   if (!mongoose.isValidObjectId(req.params.blogId)) {
-    return res.json({
+    return res.status(422).json({
       error: "Enter a valid Blog ID",
     });
   }
@@ -63,7 +63,7 @@ exports.getSpecificBlog = async (req, res, next) => {
 
 exports.updateBlog = async (req, res, next) => {
   if (!mongoose.isValidObjectId(req.params.blogId)) {
-    return res.json({
+    return res.status(422).json({
       error: "Enter a valid Blog ID",
     });
   }
@@ -93,7 +93,7 @@ exports.updateBlog = async (req, res, next) => {
 
 exports.deleteBlog = async (req, res, next) => {
   if (!mongoose.isValidObjectId(req.params.blogId)) {
-    return res.json({
+    return res.status(422).json({
       error: "Enter a valid Blog ID",
     });
   }
