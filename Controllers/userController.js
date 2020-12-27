@@ -7,7 +7,7 @@ const Blog = require("../Models/Blogs");
 
 exports.getUser = async (req, res, next) => {
   if (!mongoose.isValidObjectId(req.params.userId)) {
-    return res.json({
+    return res.status(422).json({
       error: "Enter a valid User ID",
     });
   }
@@ -20,11 +20,12 @@ exports.getUser = async (req, res, next) => {
     );
     if (!user) return res.json({ error: "No user found" });
     const blog = await Blog.find({ author: user[0]._id })
+      .populate("comments")
       .select("-author")
       .sort({ createdAt: -1 })
       .skip((page - 1) * data)
       .limit(data);
-    res.json({
+    res.status(200).json({
       user: user[0],
       blogs: blog,
     });
@@ -46,6 +47,10 @@ exports.postLogin = async (req, res, next) => {
       expiresIn: "1d",
     });
     res.status(200).json({
+      user: {
+        _id: user._id,
+        username: user.username,
+      },
       token: token,
     });
   } catch (err) {
@@ -64,12 +69,16 @@ exports.postSignup = async (req, res, next) => {
 
     const dbUser = await user.save();
 
-    return res.status(400).json({
+    return res.status(200).json({
       message: "Signed In",
+      user: {
+        _id: dbUser._id,
+        username: dbUser.username,
+      },
     });
   } catch (err) {
     if (err.code === 11000) {
-      return res.json({
+      return res.status(409).json({
         error: "Username already present",
       });
     }

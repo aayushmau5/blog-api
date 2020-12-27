@@ -36,6 +36,7 @@ exports.postBlog = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Blog saved to the database",
+      blog: blogDb,
     });
   } catch (err) {
     next(err);
@@ -52,7 +53,8 @@ exports.getSpecificBlog = async (req, res, next) => {
     const blog = await Blog.find({ _id: req.params.blogId })
       .populate("author", ["_id", "username"])
       .populate("comments");
-    if (blog.length === 0) return res.json({ error: "No blogs found" });
+    if (blog.length === 0)
+      return res.status(404).json({ error: "No blogs found" });
     return res.status(200).json({
       blog: blog[0],
     });
@@ -72,7 +74,8 @@ exports.updateBlog = async (req, res, next) => {
     const blog = await Blog.find({
       _id: req.params.blogId,
     });
-    if (blog.length === 0) return res.json({ error: "No blogs found" });
+    if (blog.length === 0)
+      return res.status(404).json({ error: "No blogs found" });
     if (blog[0].author.toString() !== req.user._id.toString()) {
       return res
         .status(422)
@@ -102,7 +105,8 @@ exports.deleteBlog = async (req, res, next) => {
       "author",
       ["_id", "username"]
     );
-    if (blog.length === 0) return res.json({ error: "No blogs found" });
+    if (blog.length === 0)
+      return res.status(404).json({ error: "No blogs found" });
     if (blog[0].author._id.toString() !== req.user._id.toString()) {
       return res
         .status(422)

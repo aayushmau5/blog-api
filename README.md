@@ -207,9 +207,6 @@ Has same contrains as `Login` POST body.
       },
       "createdAt": "time",
       "updatedAt": "time"
-    },
-    {
-        ...another blog
     }
   ]
 }
