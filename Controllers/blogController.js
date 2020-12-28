@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Blogs = require("../Models/Blogs");
 
 const Blog = require("../Models/Blogs");
 
@@ -13,8 +14,10 @@ exports.getBlogs = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip((page - 1) * data)
       .limit(data);
-    if (blogs.length === 0) return res.json({ error: "No blogs found" });
+    const numberOfBlogs = await Blogs.countDocuments();
+    if (blogs.length === 0) return res.status(200).json({ blogs: blogs });
     return res.status(200).json({
+      totalBlogs: numberOfBlogs,
       blogs: blogs,
     });
   } catch (err) {

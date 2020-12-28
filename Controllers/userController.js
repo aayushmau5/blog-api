@@ -37,9 +37,11 @@ exports.getUser = async (req, res, next) => {
 exports.postLogin = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!user) return res.json({ error: "Invalid username or password" });
+    if (!user)
+      return res.status(404).json({ error: "Invalid username or password" });
     const result = bcrypt.compare(req.body.password, user.password);
-    if (!result) return res.json({ error: "Invalid username or password" });
+    if (!result)
+      return res.status(404).json({ error: "Invalid username or password" });
     const payload = {
       id: user._id,
     };
@@ -69,12 +71,19 @@ exports.postSignup = async (req, res, next) => {
 
     const dbUser = await user.save();
 
+    const payload = {
+      id: dbUser._id,
+    };
+    const token = jwt.sign(payload, process.env.SECRET, {
+      expiresIn: "1d",
+    });
+
     return res.status(200).json({
-      message: "Signed In",
       user: {
         _id: dbUser._id,
         username: dbUser.username,
       },
+      token: token,
     });
   } catch (err) {
     if (err.code === 11000) {

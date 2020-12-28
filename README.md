@@ -69,7 +69,11 @@ If everything checks out, you would get a `200` response.
 
 ```json
 {
-  "message": "Signed In"
+  "user": {
+    "_id": "id",
+    "username": "username"
+  },
+  "token": "a jwt token"
 }
 ```
 
