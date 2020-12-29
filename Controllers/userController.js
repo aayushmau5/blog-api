@@ -99,3 +99,16 @@ exports.postSignup = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getLogout = (req, res, next) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "Logged Out",
+  });
+};
+
+exports.validate = (req, res, next) => {
+  res.status(200).json({
+    authorized: true,
+  });
+};

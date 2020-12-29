@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const passport = require("passport");
 
 const {
   userLoginValidator,
@@ -6,6 +7,16 @@ const {
   validate,
 } = require("../helpers/validationAndSanitization");
 const userController = require("../Controllers/userController");
+
+// GET /logout
+router.get("/logout", userController.getLogout);
+
+// GET /check
+router.get(
+  "/check",
+  passport.authenticate("jwt", { session: false }),
+  userController.validate
+);
 
 // GET /user/:userId
 router.get("/:userId", userController.getUser);
