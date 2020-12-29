@@ -32,13 +32,9 @@ A RESTful blog API to serve your blogs.
 
 Authentication is done using JWT.
 
-**JWT must be passed as an Authorization Header**
+**JWT must be passed From a Cookie**
 
-##### Structure of Authorization Header
-
-> Bearer \<token\>
-
-Replace `<token>` with the JWT token you get after logging in.
+The cookie name must be `token`
 
 ### Structure of POST request/response
 

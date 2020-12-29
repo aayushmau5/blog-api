@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const JwtStratery = require("passport-jwt").Strategy;
-const ExtractJwt = require("passport-jwt").ExtractJwt;
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const User = require("./Models/User");
@@ -16,14 +16,23 @@ const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+
+const cookieExtractor = (req) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["token"];
+  }
+  return token;
+};
 
 passport.use(
   new JwtStratery(
     {
       secretOrKey: process.env.SECRET,
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: cookieExtractor,
       jsonWebTokenOptions: {
-        maxAge: "1d",
+        maxAge: "2d",
       },
     },
     async (jwt_payload, done) => {

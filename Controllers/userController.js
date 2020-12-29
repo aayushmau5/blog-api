@@ -48,7 +48,10 @@ exports.postLogin = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.SECRET, {
       expiresIn: "1d",
     });
-    res.status(200).json({
+    
+    res.cookie('token', token, { httpOnly: true });
+
+    return res.status(200).json({
       user: {
         _id: user._id,
         username: user.username,
@@ -77,6 +80,8 @@ exports.postSignup = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.SECRET, {
       expiresIn: "1d",
     });
+
+    res.cookie('token', token, { httpOnly: true });
 
     return res.status(200).json({
       user: {
