@@ -4,6 +4,7 @@ const passport = require("passport");
 const JwtStratery = require("passport-jwt").Strategy;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
 require("dotenv").config();
 
 const User = require("./Models/User");
@@ -14,9 +15,12 @@ const userRoutes = require("./Routes/userRoutes");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+const csrfProtection = csrf({ cookie: true });
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(csrfProtection);
 
 const cookieExtractor = (req) => {
   let token = null;
@@ -60,6 +64,11 @@ app.get("/", (req, res, next) => {
 
 app.use("/blogs", blogRoutes);
 app.use("/user", userRoutes);
+app.get("/csrf-token", (req, res, next) => {
+  res.status(200).json({
+    csrfToken: req.csrfToken(),
+  });
+});
 
 app.use((req, res, next) => {
   res.status(400).json({
