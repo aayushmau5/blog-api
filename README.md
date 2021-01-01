@@ -131,7 +131,7 @@ On `/blogs`
   "blog": {
     "_id": "blogId",
     "title": "title",
-    "summary":"summary"
+    "summary":"summary",
     "post": "post",
     "public": true,
     "createdAt": "time",
