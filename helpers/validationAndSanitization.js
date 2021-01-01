@@ -39,6 +39,12 @@ const postBlogValidator = () => {
         "Title should be atleast 1 character long and maximum of 200 characters long"
       )
       .escape(),
+    body("summary")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Summary should not be empty")
+      .escape(),
     body("post")
       .trim()
       .not()
@@ -46,8 +52,7 @@ const postBlogValidator = () => {
       .withMessage("Post should not be empty")
       .bail()
       .isLength({ min: 1 })
-      .withMessage("Post should be atleast 1 character long")
-      .escape(),
+      .withMessage("Post should be atleast 1 character long"),
     body("public")
       .trim()
       .not()

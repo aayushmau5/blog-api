@@ -59,11 +59,9 @@ exports.deleteComment = async (req, res, next) => {
       });
     }
     let deletedComment = await Comment.findOneAndDelete({ _id: commentId });
-    console.log(deletedComment);
 
     await blog.comments.pull(commentId);
     const savedBlog = await blog.save();
-    console.log(savedBlog);
 
     res.status(200).json({
       success: true,

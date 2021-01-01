@@ -49,15 +49,21 @@ exports.postLogin = async (req, res, next) => {
       expiresIn: "1d",
     });
 
-    res.cookie("token", token, { httpOnly: true, maxAge: 172800000 });
-
-    return res.status(200).json({
-      user: {
-        _id: user._id,
-        username: user.username,
-      },
-      token: token,
-    });
+    return res
+      .status(200)
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: 172800000,
+        secure: process.env.NODE_ENV === "PRODUCTION" ? false : true,
+        sameSite: "Strict",
+      })
+      .json({
+        user: {
+          _id: user._id,
+          username: user.username,
+        },
+        token: token,
+      });
   } catch (err) {
     next(err);
   }
@@ -81,15 +87,21 @@ exports.postSignup = async (req, res, next) => {
       expiresIn: "1d",
     });
 
-    res.cookie("token", token, { httpOnly: true, maxAge: 172800000 });
-
-    return res.status(200).json({
-      user: {
-        _id: dbUser._id,
-        username: dbUser.username,
-      },
-      token: token,
-    });
+    return res
+      .status(200)
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: 172800000,
+        secure: process.env.NODE_ENV === "PRODUCTION" ? false : true,
+        sameSite: "Strict",
+      })
+      .json({
+        user: {
+          _id: dbUser._id,
+          username: dbUser.username,
+        },
+        token: token,
+      });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(409).json({

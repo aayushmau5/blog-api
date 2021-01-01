@@ -4,23 +4,23 @@ A RESTful blog API to serve your blogs.
 
 ### API Endpoints
 
-- POST `/user/signup` - Signing Up the user
+- ([Goto](#signing-up-a-user)) POST `/user/signup` - Signing Up the user, gets back userdata, JWT as well as an Authentication Cookie.
 
-- POST `/user/login` - Loggin in the user, get's back JWT
+- ([Goto](#logging-in-a-user)) POST `/user/login` - Loggin in the user, gets back userdata, JWT as well as an Authentication Cookie.
 
-- GET `/user/:userId` - Get all data about a specific user and all the blogs by that user.
+- ([Goto](#get-useruserid)) GET `/user/:userId` - Get all data about a specific user and all the blogs by that user.
 
-- GET `/blogs` - Get all public blogs
+- ([Goto](#get-blogs)) GET `/blogs` - Get all public blogs
 
-- POST `/blogs/` - Posting a blog, requires authentication
+- ([Goto](##posting-a-blog)) POST `/blogs/` - Posting a blog, requires authentication
 
-- GET `/blogs/blog/:blogId` - To get a specific blog
+- ([Goto](#get-blogsblogblogid)) GET `/blogs/blog/:blogId` - To get a specific blog
 
 - PUT `/blogs/blog/:blogId` - Updating a blog, requires authentication and only the user's blog
 
 - DELETE `/blogs/blog/:blogId` - Deleting a blog, requires authentication and only the signed in user's blog
 
-- POST `/blogs/blog/:blogId/comment` - commenting on a post
+- ([Goto](#adding-a-comment)) POST `/blogs/blog/:blogId/comment` - commenting on a post
 
 - DELETE `/blogs/blog/:blogId/comment/:commentId` - Deleting a specific comment, requires authentication and only on signed in user's blog comments.
 
@@ -61,7 +61,7 @@ The POST `/user/signup` requires two fields, `username` and `password`.
 
 ##### Response
 
-If everything checks out, you would get a `200` response.
+If everything checks out, you would get a `200` response, and receive a cookie as well.
 
 ```json
 {
@@ -90,6 +90,8 @@ Same constrains as Signing Up a User.
 
 ##### Response
 
+With cookie.
+
 ```json
 {
   "user": {
@@ -111,6 +113,7 @@ On `/blogs`
 ```json
 {
   "title": "title",
+  "summary": "summary",
   "post": "post",
   "public": true
 }
@@ -128,6 +131,7 @@ On `/blogs`
   "blog": {
     "_id": "blogId",
     "title": "title",
+    "summary":"summary"
     "post": "post",
     "public": true,
     "createdAt": "time",
@@ -200,6 +204,7 @@ Has same contrains as `Login` POST body.
       "comments": ["comments"],
       "_id": "blogId",
       "title": "title",
+      "summary": "summary",
       "post": "post",
       "author": {
         "_id": "userId",
@@ -226,6 +231,7 @@ Has same contrains as `Login` POST body.
       "comments": ["comments"],
       "_id": "id",
       "title": "title",
+      "summary": "summary",
       "post": "post",
       "createdAt": "time",
       "updatedAt": "time"
@@ -251,6 +257,7 @@ Has same contrains as `Login` POST body.
     ],
     "_id": "id",
     "title": "title",
+    "summary": "summary",
     "post": "post",
     "author": {
       "_id": "id",

@@ -26,10 +26,11 @@ exports.getBlogs = async (req, res, next) => {
 };
 
 exports.postBlog = async (req, res, next) => {
-  const { title, post, public } = req.body;
+  const { title, summary, post, public } = req.body;
   try {
     const blog = new Blog({
       title: title,
+      summary: summary,
       post: post,
       isPublic: public,
       author: req.user._id,
@@ -72,7 +73,7 @@ exports.updateBlog = async (req, res, next) => {
       error: "Enter a valid Blog ID",
     });
   }
-  const { title, post, public } = req.body;
+  const { title, summary, post, public } = req.body;
   try {
     const blog = await Blog.find({
       _id: req.params.blogId,
@@ -85,6 +86,7 @@ exports.updateBlog = async (req, res, next) => {
         .json({ error: "You are not the author of the blog" });
     }
     blog[0].title = title;
+    blog[0].summary = summary;
     blog[0].post = post;
     blog[0].isPublic = public;
     const updatedBlog = await blog[0].save();
