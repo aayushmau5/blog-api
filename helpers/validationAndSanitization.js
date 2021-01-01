@@ -43,8 +43,7 @@ const postBlogValidator = () => {
       .trim()
       .not()
       .isEmpty()
-      .withMessage("Summary should not be empty")
-      .escape(),
+      .withMessage("Summary should not be empty"),
     body("post")
       .trim()
       .not()
