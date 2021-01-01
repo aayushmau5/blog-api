@@ -14,11 +14,15 @@ const userRoutes = require("./Routes/userRoutes");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const urls = ["http://localhost:3000/"];
+const urls = [
+  "https://unruffled-austin-d3e918.netlify.app/",
+  "http://localhost:3000/",
+  /\localhost/,
+];
 
 app.use(
   cors({
-    origin: (origin, cb) => cb(null, urls.includes(origin)),
+    origin: urls,
     credentials: true,
   })
 );
