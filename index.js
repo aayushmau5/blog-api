@@ -14,7 +14,14 @@ const userRoutes = require("./Routes/userRoutes");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors({ origin: true }));
+const urls = ["http://localhost:3000/"];
+
+app.use(
+  cors({
+    origin: (origin, cb) => cb(null, urls.includes(origin)),
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
