@@ -16,14 +16,12 @@ const PORT = process.env.PORT || 8080;
 
 const urls = [
   "https://unruffled-austin-d3e918.netlify.app/",
-  "http://localhost:3000/",
   /\localhost/,
 ];
 
 app.use(
   cors({
-    origin: urls,
-    credentials: true,
+    origin: urls
   })
 );
 app.use(express.json());
