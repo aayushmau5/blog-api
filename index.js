@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const urls = [
-  "https://unruffled-austin-d3e918.netlify.app/",
+  /\unruffled-austin-d3e918.netlify.app/,
   /\localhost/,
 ];
 
