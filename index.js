@@ -21,7 +21,8 @@ const urls = [
 
 app.use(
   cors({
-    origin: urls
+    origin: urls,
+    credentials: true,
   })
 );
 app.use(express.json());
