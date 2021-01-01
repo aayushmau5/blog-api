@@ -55,7 +55,6 @@ exports.postLogin = async (req, res, next) => {
         httpOnly: true,
         maxAge: 172800000,
         secure: process.env.NODE_ENV === "PRODUCTION" ? false : true,
-        sameSite: "Strict",
       })
       .json({
         user: {
@@ -93,7 +92,6 @@ exports.postSignup = async (req, res, next) => {
         httpOnly: true,
         maxAge: 172800000,
         secure: process.env.NODE_ENV === "PRODUCTION" ? false : true,
-        sameSite: "Strict",
       })
       .json({
         user: {
