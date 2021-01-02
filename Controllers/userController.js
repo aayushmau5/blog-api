@@ -113,7 +113,7 @@ exports.postSignup = async (req, res, next) => {
 };
 
 exports.getLogout = (req, res, next) => {
-  res.clearCookie("token");
+  res.clearCookie("token", { sameSite: "None" });
   return res.status(200).json({
     message: "Logged Out",
   });
