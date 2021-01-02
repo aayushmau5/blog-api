@@ -113,7 +113,10 @@ exports.postSignup = async (req, res, next) => {
 };
 
 exports.getLogout = (req, res, next) => {
-  res.clearCookie("token", { sameSite: "None" });
+  res.clearCookie("token", {
+    secure: process.env.NODE_ENV === "PRODUCTION" ? false : true,
+    sameSite: "None",
+  });
   return res.status(200).json({
     message: "Logged Out",
   });
