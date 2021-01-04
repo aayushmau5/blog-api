@@ -2,6 +2,10 @@
 
 A RESTful blog API to serve your blogs.
 
+[Live Frontend](https://aayushblogs.netlify.app/)
+
+[Frontend Code](https://github.com/aayushmau5/blog-frontend)
+
 ### API Endpoints
 
 - ([Goto](#signing-up-a-user)) POST `/user/signup` - Signing Up the user, gets back userdata, JWT as well as an Authentication Cookie.
@@ -131,7 +135,7 @@ On `/blogs`
   "blog": {
     "_id": "blogId",
     "title": "title",
-    "summary":"summary",
+    "summary": "summary",
     "post": "post",
     "public": true,
     "createdAt": "time",
